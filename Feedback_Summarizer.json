@@ -1,0 +1,168 @@
+{
+  "name": "Feedback Summarizer",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1a000fa5-4a97-400d-bc96-996304300f9d",
+      "name": "When chat message received",
+      "webhookId": "c40f457f-0b35-4453-89d3-a87bcc200539"
+    },
+    {
+      "parameters": {
+        "text": "",
+        "options": {
+          "systemMessage": "You are a friendly assistant that summarizes customer feedback entries in a Excel Sheet.\n\nYou extract key themes, highlight common issues or praise, and support 2-3 action items or trends.\n\nUse plain business language. Your summary should be suitable for inclusion in a weekly management update.\n\nNote: This summary will be sent via Gmail and does not need formatting beyond plain text."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "5c5b65f2-5265-4cf8-90d7-1698313429b2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        220
+      ],
+      "id": "168a793a-8e58-402c-a539-84adabdf342f",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "93PLTvFRKYuf3jJ6",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        360,
+        220
+      ],
+      "id": "ddc4b873-6a02-410f-82d2-80eb32a3560c",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "resource": "worksheet",
+        "operation": "readRows",
+        "workbook": {
+          "__rl": true,
+          "value": "8399CABB6FAF1B55!s4d3c5f725b8241b493400608bdfa299f",
+          "mode": "list",
+          "cachedResultName": "customer_feedbacks",
+          "cachedResultUrl": "https://onedrive.live.com/personal/8399cabb6faf1b55/_layouts/15/doc.aspx?resid=4d3c5f72-5b82-41b4-9340-0608bdfa299f&cid=8399cabb6faf1b55"
+        },
+        "worksheet": {
+          "__rl": true,
+          "value": "{00000000-0001-0000-0000-000000000000}",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://onedrive.live.com/personal/8399cabb6faf1b55/_layouts/15/doc.aspx?resid=4d3c5f72-5b82-41b4-9340-0608bdfa299f&cid=8399cabb6faf1b55&activeCell=Sheet1!A1"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.microsoftExcelTool",
+      "typeVersion": 2.1,
+      "position": [
+        480,
+        220
+      ],
+      "id": "a4649292-692e-441b-a7c2-f48fdcf8538c",
+      "name": "Get rows from sheet in Microsoft Excel 365",
+      "credentials": {
+        "microsoftExcelOAuth2Api": {
+          "id": "mT4uvLxWwbbCf06q",
+          "name": "Microsoft Excel account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Get rows from sheet in Microsoft Excel 365": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "69150595-5373-4c3b-becf-d8623dd2e0d7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "9545546189ed567fd9925b8d23a123056ca1584363455a08d1b25e6d51c82065"
+  },
+  "id": "WMiDSMO8NAUDi1mA",
+  "tags": []
+}
